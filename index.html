@@ -890,6 +890,7 @@
     let musicLoopHandle = null;
     let activeTrackKey = null;      // which track is actually scheduled right now
     let currentTrackLevel = 1;      // which track the toggle button should restart (1 or 7)
+    let activeNotes = [];           // every currently-scheduled {osc, gainNode}, so we can silence them instantly on switch
 
     const noteFreq = {
       'A3': 220.00, 'B3': 246.94, 'C4': 261.63, 'D4': 293.66, 'E4': 329.63, 'F4': 349.23, 'G4': 392.00, 'A4': 440.00, 'B4': 493.88,
@@ -940,6 +941,28 @@
       gainNode.connect(audioCtx.destination);
       osc.start(startTime);
       osc.stop(startTime + duration + 0.05);
+
+      const entry = { osc, gainNode };
+      activeNotes.push(entry);
+      osc.onended = () => {
+        const idx = activeNotes.indexOf(entry);
+        if (idx !== -1) activeNotes.splice(idx, 1);
+      };
+    }
+
+    // Instantly silences every note currently scheduled/playing (from any
+    // track), so switching tracks never overlaps two songs at once.
+    function silenceActiveNotes() {
+      const now = audioCtx ? audioCtx.currentTime : 0;
+      activeNotes.forEach(({ osc, gainNode }) => {
+        try {
+          gainNode.gain.cancelScheduledValues(now);
+          gainNode.gain.setValueAtTime(gainNode.gain.value, now);
+          gainNode.gain.linearRampToValueAtTime(0.0001, now + 0.03);
+          osc.stop(now + 0.04);
+        } catch (e) { /* note may have already ended naturally */ }
+      });
+      activeNotes = [];
     }
 
     function scheduleTrackPass(track) {
@@ -975,6 +998,7 @@
     function playTrackForLevel(level) {
       if (!tracks[level]) return; // no track defined for this level, leave music as-is
       if (musicLoopHandle) clearTimeout(musicLoopHandle);
+      silenceActiveNotes(); // stop whatever is currently sounding before starting the new track
       activeTrackKey = level;
       currentTrackLevel = level;
       if (!musicWanted) { musicPlaying = false; updateMusicBtn(level); return; }
@@ -988,6 +1012,7 @@
       musicPlaying = false;
       activeTrackKey = null;
       if (musicLoopHandle) clearTimeout(musicLoopHandle);
+      silenceActiveNotes();
     }
 
     function toggleMusic() {
@@ -996,6 +1021,7 @@
         playTrackForLevel(currentTrackLevel);
       } else {
         if (musicLoopHandle) clearTimeout(musicLoopHandle);
+        silenceActiveNotes();
         musicPlaying = false;
         updateMusicBtn(currentTrackLevel);
       }
