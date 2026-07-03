@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Happy Birthday, My Love</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Dancing+Script:wght@500;700&family=Mukta:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --wine: #4a1420;
+      --wine-deep: #2e0c14;
+      --blush: #f3d9d6;
+      --rose: #d98c8c;
+      --gold: #c9a24b;
+      --gold-soft: #e6cd8f;
+      --cream: #fdf6ee;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at 50% 20%, var(--wine) 0%, var(--wine-deep) 75%);
+      font-family: 'Cormorant Garamond', serif;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .stage {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Floating petals */
+    .petal {
+      position: fixed;
+      top: -10%;
+      font-size: 18px;
+      color: var(--rose);
+      opacity: 0.75;
+      animation: fall linear infinite;
+      z-index: 1;
+      pointer-events: none;
+      user-select: none;
+      text-shadow: 0 0 10px rgba(217, 140, 140, 0.6);
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(0) translateX(0) rotate(0deg) scale(1);
+        opacity: 0.9;
+      }
+
+      50% {
+        transform: translateY(55vh) translateX(-14px) rotate(180deg) scale(1.15);
+      }
+
+      100% {
+        transform: translateY(110vh) translateX(20px) rotate(360deg) scale(1);
+        opacity: 0.15;
+      }
+    }
+
+    /* Kiss burst particles */
+    .kiss-particle {
+      position: fixed;
+      font-size: 26px;
+      z-index: 50;
+      pointer-events: none;
+      user-select: none;
+      animation: kissFloat 1.8s ease-out forwards;
+    }
+
+    @keyframes kissFloat {
+      0% {
+        transform: translate(0, 0) scale(0.4) rotate(0deg);
+        opacity: 0;
+      }
+
+      15% {
+        opacity: 1;
+        transform: translate(0, -10px) scale(1.1) rotate(-8deg);
+      }
+
+      100% {
+        transform: translate(var(--dx, 0), -260px) scale(0.9) rotate(var(--rot, 20deg));
+        opacity: 0;
+      }
+    }
+
+    /* Lip kiss mark */
+    .kiss-mark {
+      display: inline-block;
+      font-size: 30px;
+      margin: 6px 0 4px;
+      animation: kissPop 1s ease;
+    }
+
+    @keyframes kissPop {
+      0% {
+        transform: scale(0) rotate(-20deg);
+        opacity: 0;
+      }
+
+      60% {
+        transform: scale(1.3) rotate(6deg);
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+      }
+    }
+
+    .kiss-btn {
+      display: inline-block;
+      margin-top: 18px;
+      background: linear-gradient(120deg, var(--rose), var(--wine));
+      color: var(--cream);
+      border: 1px solid var(--gold-soft);
+      font-family: 'Mukta', sans-serif;
+      font-weight: 600;
+      font-size: 16px;
+      padding: 10px 26px;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(74, 20, 32, 0.5);
+      animation: kissBtnPulse 1.8s ease-in-out infinite;
+      transition: transform 0.2s ease;
+    }
+
+    .kiss-btn:hover {
+      transform: scale(1.06);
+    }
+
+    @keyframes kissBtnPulse {
+
+      0%,
+      100% {
+        box-shadow: 0 4px 14px rgba(74, 20, 32, 0.5);
+      }
+
+      50% {
+        box-shadow: 0 4px 22px rgba(217, 140, 140, 0.75);
+      }
+    }
+
+    /* Music toggle button (floating, persistent across all slides) */
+    .music-btn {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(46, 12, 20, 0.75);
+      color: var(--gold-soft);
+      border: 1px solid var(--gold);
+      font-family: 'Mukta', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      padding: 9px 18px;
+      border-radius: 30px;
+      cursor: pointer;
+      z-index: 60;
+      backdrop-filter: blur(4px);
+      transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    }
+
+    .music-btn:hover {
+      background: var(--gold);
+      color: var(--wine-deep);
+      transform: translateY(-2px);
+    }
+
+    .music-btn.playing .note-icon {
+      animation: noteBob 1s ease-in-out infinite;
+    }
+
+    #musicTrackLabel {
+      display: block;
+      font-size: 11px;
+      opacity: 0.75;
+      font-style: italic;
+    }
+
+    @keyframes noteBob {
+
+      0%,
+      100% {
+        transform: translateY(0) rotate(0deg);
+      }
+
+      50% {
+        transform: translateY(-3px) rotate(-8deg);
+      }
+    }
+
+    .surprise-actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    @media (max-width: 480px) {
+      .music-btn {
+        top: 10px;
+        right: 10px;
+        padding: 7px 14px;
+        font-size: 12px;
+      }
+    }
+
+    /* Envelope */
+    .envelope-wrap {
+      text-align: center;
+    }
+
+    .prompt {
+      color: var(--gold-soft);
+      font-family: 'Mukta', sans-serif;
+      font-weight: 500;
+      font-size: 24px;
+      margin-bottom: 28px;
+      letter-spacing: 0.3px;
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 0.75;
+        transform: translateY(0);
+      }
+
+      50% {
+        opacity: 1;
+        transform: translateY(-4px);
+      }
+    }
+
+    .envelope {
+      width: 280px;
+      height: 190px;
+      margin: 0 auto;
+      position: relative;
+      cursor: pointer;
+      filter: drop-shadow(0 20px 35px rgba(0, 0, 0, 0.45));
+      transition: transform 0.3s ease;
+    }
+
+    .envelope:hover {
+      transform: translateY(-6px) scale(1.02);
+    }
+
+    .env-body {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg, var(--blush), #e9c3c3);
+      border-radius: 6px;
+      border: 1px solid var(--gold-soft);
+    }
+
+    .env-flap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 100px;
+      background: linear-gradient(160deg, var(--rose), #c97a7a);
+      clip-path: polygon(0 0, 100% 0, 50% 78%);
+      transform-origin: top center;
+      transition: transform 0.7s cubic-bezier(.6, 0, .35, 1.3);
+      z-index: 3;
+      border-radius: 6px 6px 0 0;
+    }
+
+    .envelope.open .env-flap {
+      transform: rotateX(180deg);
+    }
+
+    .env-seal {
+      position: absolute;
+      top: 66px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 46px;
+      height: 46px;
+      background: radial-gradient(circle at 35% 35%, var(--gold-soft), var(--gold));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: var(--wine-deep);
+      z-index: 4;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.35);
+      transition: opacity 0.4s ease;
+    }
+
+    .envelope.open .env-seal {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .env-letter {
+      position: absolute;
+      left: 8%;
+      right: 8%;
+      bottom: 6%;
+      height: 82%;
+      background: var(--cream);
+      border-radius: 4px;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+      transform: translateY(0);
+      transition: transform 0.7s ease 0.15s;
+      z-index: 2;
+    }
+
+    .envelope.open .env-letter {
+      transform: translateY(-58%);
+    }
+
+    /* Card / message */
+    .card {
+      max-width: 560px;
+      margin: 40px auto 0;
+      background: var(--cream);
+      border: 1px solid var(--gold-soft);
+      border-radius: 10px;
+      padding: 46px 44px 40px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      transform: translateY(30px) scale(0.97);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+      position: relative;
+    }
+
+    .card.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      animation: cardGlow 4s ease-in-out infinite;
+    }
+
+    @keyframes cardGlow {
+
+      0%,
+      100% {
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+      }
+
+      50% {
+        box-shadow: 0 25px 70px rgba(217, 140, 140, 0.35), 0 0 40px rgba(201, 162, 75, 0.25);
+      }
+    }
+
+    .env-seal {
+      animation: sealBeat 1.3s ease-in-out infinite;
+    }
+
+    @keyframes sealBeat {
+
+      0%,
+      100% {
+        transform: translateX(-50%) scale(1);
+      }
+
+      25% {
+        transform: translateX(-50%) scale(1.12);
+      }
+
+      40% {
+        transform: translateX(-50%) scale(0.98);
+      }
+    }
+
+    .card::before,
+    .card::after {
+      content: "";
+      position: absolute;
+      width: 46px;
+      height: 46px;
+      border: 2px solid var(--gold);
+      opacity: 0.6;
+    }
+
+    .card::before {
+      top: 12px;
+      left: 12px;
+      border-right: none;
+      border-bottom: none;
+    }
+
+    .card::after {
+      bottom: 12px;
+      right: 12px;
+      border-left: none;
+      border-top: none;
+    }
+
+    .card h1 {
+      font-family: 'Dancing Script', cursive;
+      font-size: 46px;
+      color: var(--wine);
+      text-align: center;
+      margin: 0 0 6px;
+      font-weight: 700;
+    }
+
+    .card .to {
+      text-align: center;
+      font-style: italic;
+      color: var(--rose);
+      font-size: 19px;
+      margin-bottom: 22px;
+      letter-spacing: 0.5px;
+      font-family: 'Mukta', sans-serif;
+    }
+
+    .card p {
+      color: #3a2a2a;
+      font-size: 20px;
+      line-height: 1.75;
+      margin: 0 0 16px;
+    }
+
+    .card .sign {
+      text-align: right;
+      font-family: 'Mukta', sans-serif;
+      font-weight: 600;
+      font-size: 22px;
+      color: var(--wine);
+      margin-top: 20px;
+    }
+
+    .hearts-row {
+      text-align: center;
+      font-size: 22px;
+      color: var(--rose);
+      margin-top: 18px;
+      letter-spacing: 8px;
+    }
+
+    /* Progressive levels */
+    .levels {
+      position: relative;
+      min-height: 220px;
+    }
+
+    .level {
+      display: none;
+      text-align: center;
+      animation: levelIn 0.6s ease;
+    }
+
+    .level.active {
+      display: block;
+    }
+
+    @keyframes levelIn {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .level .eyebrow {
+      font-family: 'Mukta', sans-serif;
+      font-weight: 600;
+      font-size: 20px;
+      color: var(--rose);
+      margin-bottom: 10px;
+      letter-spacing: 0.3px;
+    }
+
+    .level p {
+      color: #3a2a2a;
+      font-size: 21px;
+      line-height: 1.9;
+      margin: 0 0 14px;
+      font-family: 'Mukta', sans-serif;
+      font-weight: 400;
+    }
+
+    .progress-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 22px 0 26px;
+      flex-wrap: wrap;
+    }
+
+    .progress-dots span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gold-soft);
+      opacity: 0.35;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .progress-dots span.filled {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+
+    .next-btn {
+      display: inline-block;
+      background: var(--wine);
+      color: var(--gold-soft);
+      border: 1px solid var(--gold);
+      font-family: 'Mukta', sans-serif;
+      font-weight: 500;
+      font-size: 17px;
+      padding: 10px 30px;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    }
+
+    .next-btn:hover {
+      background: var(--gold);
+      color: var(--wine-deep);
+      transform: translateY(-2px);
+    }
+
+    .name-highlight {
+      font-family: 'Dancing Script', cursive;
+      font-weight: 700;
+      color: var(--wine);
+    }
+
+    .big-love {
+      font-family: 'Dancing Script', cursive;
+      font-weight: 700;
+      font-size: 64px;
+      line-height: 1.1;
+      text-align: center;
+      background: linear-gradient(120deg, var(--gold), var(--rose), var(--gold-soft));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin: 10px 0 8px;
+      animation: loveBeat 1.6s ease-in-out infinite;
+      text-shadow: 0 2px 18px rgba(201, 162, 75, 0.25);
+    }
+
+    .bday-name {
+      font-family: 'Dancing Script', cursive;
+      font-weight: 700;
+      font-size: 40px;
+      text-align: center;
+      color: var(--wine);
+      margin: 4px 0 2px;
+    }
+
+    .bday-jaan {
+      font-family: 'Mukta', sans-serif;
+      font-weight: 600;
+      font-size: 20px;
+      text-align: center;
+      color: var(--rose);
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+
+    @keyframes loveBeat {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.06);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .big-love {
+        font-size: 44px;
+      }
+
+      .bday-name {
+        font-size: 30px;
+      }
+    }
+
+    .replay {
+      display: block;
+      margin: 26px auto 0;
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold-soft);
+      font-family: 'Mukta', sans-serif;
+      font-size: 16px;
+      padding: 9px 22px;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .replay:hover {
+      background: var(--gold);
+      color: var(--wine-deep);
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 32px 24px;
+      }
+
+      .card h1 {
+        font-size: 36px;
+      }
+
+      .card p {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="stage">
+    <div class="envelope-wrap">
+      <div class="prompt" id="prompt">Lifafa kholo, meri jaaaan ✦</div>
+
+      <div class="envelope" id="envelope" onclick="openEnvelope()">
+        <div class="env-letter"></div>
+        <div class="env-body"></div>
+        <div class="env-flap"></div>
+        <div class="env-seal">♥</div>
+      </div>
+
+      <div class="card" id="card">
+        <h1>Happy Birthday</h1>
+        <div class="to">Meri zindagi ke pyaaar, <span class="name-highlight">Mayur</span> ko</div>
+
+        <div class="progress-dots" id="dots">
+          <span class="dot filled"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+
+        <div class="levels">
+          <div class="level active" data-level="1">
+            <div class="eyebrow">Pehli mulaakaaat</div>
+            <p>Tumhe dekha jab pehli baar,<br>
+              Dil ne kaha - yehi hai woh pyaaar,<br>
+              Aankhon mein teri kho gayi main sooooona,<br>
+              Bas tujhse shuru hua mera har bahaar.</p>
+            <button class="next-btn" onclick="nextLevel()">Aage padhein ♡</button>
+          </div>
+
+          <div class="level" data-level="2">
+            <div class="eyebrow">Sagaai ka woh pal</div>
+            <p>Haathon mein haath jab tera aaya,<br>
+              Har vaada dil ne khud se nibhaaya,<br>
+              Ring se bhi bada tujhe dil diya maine,<br>
+              Tujhme hi apna poora jahaaan basaaya.</p>
+            <button class="next-btn" onclick="nextLevel()">Aur bhi hai ♡</button>
+          </div>
+
+          <div class="level" data-level="3">
+            <div class="eyebrow">Messages aur calls ki baatein</div>
+            <p>Har message mein teri khushboo mehekti hai,<br>
+              Har call pe teri awaaz sukoon barsati hai,<br>
+              Door rehkar bhi tu itna paas lage,<br>
+              Jaise ruuh se ruuh baatein karti hai.</p>
+            <button class="next-btn" onclick="nextLevel()">Ek baat aur ♡</button>
+          </div>
+
+          <div class="level" data-level="4">
+            <div class="eyebrow">Video call pe tera chehra</div>
+            <p>Screen pe jab muskaan teri khilti hai,<br>
+              Har thakaan meri wahin pighal jaati hai,<br>
+              Faasle chahe jitne bhi hon darmiyaan,<br>
+              Teri ek jhalak dil ko mehfil bana jaati hai.</p>
+            <button class="next-btn" onclick="nextLevel()">Aur aakhir mein... ♡</button>
+          </div>
+
+          <div class="level" data-level="5">
+            <div class="eyebrow">Aaj, birthday pe milna</div>
+            <p>Aaj gale lagkar tujhe jee bhar jeena hai,<br>
+              Birthday ki har khushi sang tere baantni hai,<br>
+              Har saans, har pal tere saath beete bas,<br>
+              Itni si baat tujhse aaj kehni hai...</p>
+            <button class="next-btn" onclick="nextLevel()">Ek shararti surprise ♡</button>
+          </div>
+
+          <div class="level" data-level="6">
+            <div class="eyebrow">Sirf tere kaano ke liye 🙈</div>
+            <p>Aaj mile toh waqt bhi ruk sa jaaye,<br>
+              Teri nazrein mujhe kuch aisa keh jaayein,<br>
+              Chandni ho halki, tu mere paas ho,<br>
+              Aur do dil ek dhadkan mein dhal jaayein.</p>
+            <p style="font-size:19px; color:var(--rose); font-style:italic;">Baaki jo kehna hai... woh aaj milkar, kaan
+              mein bataaungi 😘</p>
+            <button class="next-btn" onclick="nextLevel()">Aakhri surprise ♡</button>
+          </div>
+
+          <div class="level" data-level="7">
+            <div class="eyebrow">Meri sabse pyaari dua</div>
+
+            <div class="bday-visual">
+              <svg viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg">
+                <!-- balloon left -->
+                <g class="balloon balloon-left">
+                  <ellipse cx="46" cy="52" rx="26" ry="32" fill="#d98c8c" />
+                  <ellipse cx="38" cy="42" rx="8" ry="10" fill="#f3d9d6" opacity="0.5" />
+                  <path d="M46 84 Q50 92 46 100" stroke="#c9a24b" stroke-width="1.5" fill="none" />
+                  <polygon points="43,84 49,84 46,90" fill="#d98c8c" />
+                </g>
+                <g class="balloon balloon-left2">
+                  <ellipse cx="80" cy="34" rx="18" ry="23" fill="#e6cd8f" />
+                  <ellipse cx="74" cy="26" rx="6" ry="7" fill="#fdf6ee" opacity="0.5" />
+                  <path d="M80 57 Q83 66 80 74" stroke="#c9a24b" stroke-width="1.3" fill="none" />
+                  <polygon points="77.5,57 82.5,57 80,62" fill="#e6cd8f" />
+                </g>
+                <!-- balloon right -->
+                <g class="balloon balloon-right">
+                  <ellipse cx="274" cy="48" rx="26" ry="32" fill="#c9a24b" />
+                  <ellipse cx="266" cy="38" rx="8" ry="10" fill="#f3d9d6" opacity="0.4" />
+                  <path d="M274 80 Q270 90 274 98" stroke="#c9a24b" stroke-width="1.5" fill="none" />
+                  <polygon points="271,80 277,80 274,86" fill="#c9a24b" />
+                </g>
+                <g class="balloon balloon-right2">
+                  <ellipse cx="242" cy="30" rx="17" ry="22" fill="#d98c8c" />
+                  <ellipse cx="236" cy="23" rx="5.5" ry="6.5" fill="#fdf6ee" opacity="0.4" />
+                  <path d="M242 52 Q245 61 242 69" stroke="#c9a24b" stroke-width="1.3" fill="none" />
+                  <polygon points="239.5,52 244.5,52 242,57" fill="#d98c8c" />
+                </g>
+
+                <!-- cake stand -->
+                <ellipse cx="160" cy="176" rx="70" ry="7" fill="#2e0c14" opacity="0.35" />
+
+                <!-- cake base tier -->
+                <rect x="100" y="140" width="120" height="32" rx="4" fill="#4a1420" />
+                <rect x="100" y="140" width="120" height="8" fill="#f3d9d6" />
+                <!-- cake middle tier -->
+                <rect x="115" y="112" width="90" height="30" rx="4" fill="#6a1f30" />
+                <rect x="115" y="112" width="90" height="7" fill="#e6cd8f" />
+                <!-- cake top tier -->
+                <rect x="130" y="86" width="60" height="28" rx="4" fill="#4a1420" />
+                <rect x="130" y="86" width="60" height="7" fill="#f3d9d6" />
+
+                <!-- candles -->
+                <rect x="150" y="66" width="4" height="20" fill="#e6cd8f" />
+                <rect x="166" y="60" width="4" height="26" fill="#d98c8c" />
+                <rect x="182" y="66" width="4" height="20" fill="#e6cd8f" />
+
+                <!-- flames -->
+                <ellipse class="flame" cx="152" cy="62" rx="3.2" ry="5.5" fill="#f4b942" />
+                <ellipse class="flame" cx="168" cy="56" rx="3.4" ry="6" fill="#f4b942" />
+                <ellipse class="flame" cx="184" cy="62" rx="3.2" ry="5.5" fill="#f4b942" />
+
+                <!-- sprinkles -->
+                <circle cx="120" cy="126" r="2" fill="#e6cd8f" />
+                <circle cx="140" cy="130" r="2" fill="#f3d9d6" />
+                <circle cx="180" cy="128" r="2" fill="#d98c8c" />
+                <circle cx="200" cy="126" r="2" fill="#e6cd8f" />
+                <circle cx="130" cy="155" r="2.2" fill="#f3d9d6" />
+                <circle cx="160" cy="158" r="2.2" fill="#e6cd8f" />
+                <circle cx="190" cy="155" r="2.2" fill="#d98c8c" />
+              </svg>
+            </div>
+
+            <div class="bday-jaan">HAPPY BIRTHDAY</div>
+            <div class="bday-name">Mayur, meri jaaaan ❤</div>
+            <div class="kiss-mark">💋</div>
+            <div class="big-love">I LOVE YOU</div>
+            <div class="surprise-actions">
+              <button class="kiss-btn" onclick="sendKiss(event)">Ek kiss bheju? 😘</button>
+            </div>
+            <div class="sign">Hamesha tumhari sooooona ♡</div>
+            <div class="hearts-row">♡ 😘 ♡ 💕 ♡</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="replay" id="replay" onclick="resetCard()" style="display:none;">↺ Phir se kholein</button>
+    </div>
+  </div>
+
+  <button class="music-btn" id="musicBtn" onclick="toggleMusic()" style="display:none;">
+    <span class="note-icon">🎵</span>
+    <span>
+      <span id="musicBtnLabel">Music on</span>
+      <span id="musicTrackLabel"></span>
+    </span>
+  </button>
+
+  <script>
+    function openEnvelope() {
+      const env = document.getElementById('envelope');
+      const card = document.getElementById('card');
+      const prompt = document.getElementById('prompt');
+
+      if (env.classList.contains('open')) return;
+
+      env.classList.add('open');
+      prompt.style.opacity = '0';
+
+      const rect = env.getBoundingClientRect();
+      burstHearts(rect.left + rect.width / 2, rect.top + rect.height / 2, 14);
+
+      // Start the "I Love You" theme as soon as the letter opens (this click
+      // is our "user gesture" that unlocks audio in the browser)
+      playTrackForLevel(1);
+
+      setTimeout(() => {
+        card.classList.add('show');
+      }, 500);
+    }
+
+    function burstHearts(x, y, count) {
+      const emojis = ['♥', '💕', '💖', '✦'];
+      for (let i = 0; i < count; i++) {
+        const el = document.createElement('div');
+        el.className = 'kiss-particle';
+        el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        el.style.left = x + 'px';
+        el.style.top = y + 'px';
+        const dx = (Math.random() * 200 - 100) + 'px';
+        const rot = (Math.random() * 60 - 30) + 'deg';
+        el.style.setProperty('--dx', dx);
+        el.style.setProperty('--rot', rot);
+        el.style.animationDuration = (1.3 + Math.random() * 0.8) + 's';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 2200);
+      }
+    }
+
+    function sendKiss(evt) {
+      const rect = evt.target.getBoundingClientRect();
+      burstHearts(rect.left + rect.width / 2, rect.top, 16);
+      const kissEmojis = ['💋', '😘'];
+      for (let i = 0; i < 6; i++) {
+        const el = document.createElement('div');
+        el.className = 'kiss-particle';
+        el.textContent = kissEmojis[Math.floor(Math.random() * kissEmojis.length)];
+        el.style.left = (rect.left + rect.width / 2) + 'px';
+        el.style.top = rect.top + 'px';
+        const dx = (Math.random() * 240 - 120) + 'px';
+        const rot = (Math.random() * 50 - 25) + 'deg';
+        el.style.setProperty('--dx', dx);
+        el.style.setProperty('--rot', rot);
+        el.style.fontSize = '30px';
+        el.style.animationDuration = (1.5 + Math.random() * 0.7) + 's';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 2400);
+      }
+    }
+
+    /* ---------- Background music: just two songs now ----------
+       Slide 1 ("Pehli mulaakaat") plays the "I Love You" theme the whole
+       way through slides 1-6, and the final slide switches to a
+       "Happy Birthday" tune. Nothing else changes the track. */
+    let audioCtx = null;
+    let musicPlaying = false;
+    let musicWanted = true;
+    let musicLoopHandle = null;
+    let activeTrackKey = null;      // which track is actually scheduled right now
+    let currentTrackLevel = 1;      // which track the toggle button should restart (1 or 7)
+
+    const noteFreq = {
+      'A3': 220.00, 'B3': 246.94, 'C4': 261.63, 'D4': 293.66, 'E4': 329.63, 'F4': 349.23, 'G4': 392.00, 'A4': 440.00, 'B4': 493.88,
+      'C5': 523.25, 'D5': 587.33, 'E5': 659.25, 'F5': 698.46, 'G5': 783.99, 'A5': 880.00, 'B5': 987.77, 'C6': 1046.50, 'D6': 1174.66
+    };
+
+    const tracks = {
+      1: { // Plays from the moment the envelope opens through slide 6
+        name: 'I Love You, Mayur',
+        type: 'sine',
+        melody: [
+          ['C5', 0.55], ['E5', 0.55], ['G5', 0.55], ['C6', 0.85],
+          ['B5', 0.55], ['G5', 0.55], ['E5', 0.55], ['D5', 0.85],
+          ['C5', 0.55], ['E5', 0.55], ['A5', 0.55], ['G5', 0.85],
+          ['F5', 0.55], ['E5', 0.55], ['D5', 0.55], ['C5', 1.1]
+        ],
+        bass: [['C4', 2.2], ['A4', 2.2], ['F4', 2.2], ['G4', 2.2]]
+      },
+      7: { // The grand finale - classic "Happy Birthday to You" tune
+        name: 'Happy Birthday',
+        type: 'triangle',
+        melody: [
+          ['G4', 0.4], ['G4', 0.4], ['A4', 0.8], ['G4', 0.8], ['C5', 0.8], ['B4', 1.4],
+          ['G4', 0.4], ['G4', 0.4], ['A4', 0.8], ['G4', 0.8], ['D5', 0.8], ['C5', 1.4],
+          ['G4', 0.4], ['G4', 0.4], ['G5', 0.8], ['E5', 0.8], ['C5', 0.8], ['B4', 0.8], ['A4', 1.4],
+          ['F5', 0.4], ['F5', 0.4], ['E5', 0.8], ['C5', 0.8], ['D5', 0.8], ['C5', 1.6]
+        ],
+        bass: [['C4', 2.4], ['G4', 2.4], ['A4', 2.4], ['F4', 2.4]]
+      }
+    };
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    function playTone(freq, startTime, duration, peakGain, type) {
+      const osc = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+      osc.type = type || 'sine';
+      osc.frequency.value = freq;
+      gainNode.gain.setValueAtTime(0.0001, startTime);
+      gainNode.gain.linearRampToValueAtTime(peakGain, startTime + 0.06);
+      gainNode.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+      osc.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      osc.start(startTime);
+      osc.stop(startTime + duration + 0.05);
+    }
+
+    function scheduleTrackPass(track) {
+      const startAt = audioCtx.currentTime + 0.1;
+
+      let t = startAt;
+      track.melody.forEach(([note, dur]) => {
+        playTone(noteFreq[note], t, dur, 0.11, track.type);
+        t += dur;
+      });
+      const melodyDuration = t - startAt;
+
+      let bt = startAt;
+      track.bass.forEach(([note, dur]) => {
+        playTone(noteFreq[note], bt, dur, 0.045, 'triangle');
+        bt += dur;
+      });
+
+      return melodyDuration;
+    }
+
+    function musicLoop(level) {
+      if (!musicPlaying || activeTrackKey !== level) return;
+      initAudio();
+      const track = tracks[level];
+      const dur = scheduleTrackPass(track);
+      musicLoopHandle = setTimeout(() => musicLoop(level), dur * 1000);
+    }
+
+    // Switches to (and starts) the given track. Only ever called with 1
+    // (envelope opening) or 7 (final slide) — every slide in between just
+    // keeps whatever is already playing.
+    function playTrackForLevel(level) {
+      if (!tracks[level]) return; // no track defined for this level, leave music as-is
+      if (musicLoopHandle) clearTimeout(musicLoopHandle);
+      activeTrackKey = level;
+      currentTrackLevel = level;
+      if (!musicWanted) { musicPlaying = false; updateMusicBtn(level); return; }
+      initAudio();
+      musicPlaying = true;
+      musicLoop(level);
+      updateMusicBtn(level);
+    }
+
+    function stopAllMusic() {
+      musicPlaying = false;
+      activeTrackKey = null;
+      if (musicLoopHandle) clearTimeout(musicLoopHandle);
+    }
+
+    function toggleMusic() {
+      musicWanted = !musicWanted;
+      if (musicWanted) {
+        playTrackForLevel(currentTrackLevel);
+      } else {
+        if (musicLoopHandle) clearTimeout(musicLoopHandle);
+        musicPlaying = false;
+        updateMusicBtn(currentTrackLevel);
+      }
+    }
+
+    function updateMusicBtn(level) {
+      const btn = document.getElementById('musicBtn');
+      const label = document.getElementById('musicBtnLabel');
+      const trackLabel = document.getElementById('musicTrackLabel');
+      if (!btn || !label) return;
+      btn.style.display = 'inline-flex';
+      const track = tracks[level] || tracks[1];
+      if (musicPlaying) {
+        btn.classList.add('playing');
+        label.textContent = 'Music on';
+        btn.querySelector('.note-icon').textContent = '🎵';
+        trackLabel.textContent = track.name;
+      } else {
+        btn.classList.remove('playing');
+        label.textContent = 'Music off';
+        btn.querySelector('.note-icon').textContent = '🔇';
+        trackLabel.textContent = '';
+      }
+    }
+
+    /* ---------- Levels / progress ---------- */
+    let currentLevel = 1;
+    const totalLevels = 7;
+
+    function nextLevel() {
+      if (currentLevel >= totalLevels) return;
+
+      const current = document.querySelector('.level[data-level="' + currentLevel + '"]');
+      current.classList.remove('active');
+
+      currentLevel++;
+
+      const next = document.querySelector('.level[data-level="' + currentLevel + '"]');
+      next.classList.add('active');
+
+      const dots = document.querySelectorAll('#dots .dot');
+      dots[currentLevel - 1].classList.add('filled');
+
+      // Only the final slide switches the song (to Happy Birthday);
+      // slides 2-6 just let the "I Love You" theme keep playing.
+      if (currentLevel === totalLevels) {
+        playTrackForLevel(totalLevels);
+        document.getElementById('replay').style.display = 'inline-block';
+        const cardRect = document.getElementById('card').getBoundingClientRect();
+        burstHearts(cardRect.left + cardRect.width / 2, cardRect.top + 60, 20);
+      }
+    }
+
+    function resetCard() {
+      const env = document.getElementById('envelope');
+      const card = document.getElementById('card');
+      const prompt = document.getElementById('prompt');
+      const replay = document.getElementById('replay');
+
+      card.classList.remove('show');
+      env.classList.remove('open');
+      replay.style.display = 'none';
+      stopAllMusic();
+      currentTrackLevel = 1;
+
+      document.querySelectorAll('.level').forEach(l => l.classList.remove('active'));
+      document.querySelector('.level[data-level="1"]').classList.add('active');
+      document.querySelectorAll('#dots .dot').forEach((d, i) => {
+        d.classList.toggle('filled', i === 0);
+      });
+      currentLevel = 1;
+
+      setTimeout(() => { prompt.style.opacity = '1'; }, 300);
+    }
+
+    // Floating petals/hearts background
+    const symbols = ['♥', '✦', '❀', '💕', '💖', '😘', '💋'];
+    const container = document.body;
+    for (let i = 0; i < 22; i++) {
+      const p = document.createElement('div');
+      p.className = 'petal';
+      p.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+      p.style.left = Math.random() * 100 + 'vw';
+      p.style.fontSize = (12 + Math.random() * 14) + 'px';
+      p.style.animationDuration = (8 + Math.random() * 10) + 's';
+      p.style.animationDelay = (Math.random() * 10) + 's';
+      container.appendChild(p);
+    }
+  </script>
+
+</body>
+
+</html>
